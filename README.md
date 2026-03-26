@@ -39,8 +39,9 @@
 [//]: # ()
 
 
-# CIP_Group_Project_111
-
+# ✈️ Flight Departure Delay Analysis – Zurich Airport (ZRH)
+### CIP Group Project 111 | FS2026
+**Hanieh Jebeli · Elif Gürçinar · Silan Cihaner**
 ## Data Collection Integration and Preprocessing: Analysis and Prediction of Flight Departure Delays at Zurich Airport (ZRH)
 
 This project was developed as part of the **CIP course** and focuses on the analysis and prediction of flight departure delays at **Zurich Airport (ZRH)**.
@@ -142,14 +143,18 @@ The cleaned dataset is then exported for the next project steps.
 
 ## Project structure
 
-```bash
-CIP_Group_Project_111/
-│
-├── data_cleaning.py
-├── analysis_visualization.py
-├── modeling.py
+````
+CIP_FS2026_111/
+├── 1_data_acquisition/
+│   ├── flight_AeroDataBox.py     # Fetches departed flights from the API
+│   └── flight_cancel.py          # Same but includes cancelled flights
+├── 2_cleaning_transformation/
+│   └── cip_pipeline_final.py     # Full cleaning, feature engineering & export
+├── 3_analysis_modelling/
+│   └── cip_pipeline_final.py     # Visualizations & regression models
+├── .env                          # Your API key goes here (not on GitHub!)
+├── .gitignore
 ├── requirements.txt
-├── README.md
-├── ZRH_Departure_Delays_2025.csv
-├── ZRH_All_Flights_Inc_Canceled_2025.csv
-└── ZRH_Cleaned_Flights_2025.csv
+└── README.md
+
+ 
