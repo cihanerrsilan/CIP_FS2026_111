@@ -3,6 +3,7 @@ import pandas as pd
 import warnings
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
 
 # Suppress SSL warnings on Mac
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -66,7 +67,8 @@ if all_flights:
     print("Total Number of Flights:", df_final.shape[0])
 
     # Save the data as a CSV file to the current directory
-    file_name = "ZRH_Departure_Delays_2025.csv"
+    Path("../data").mkdir(parents=True, exist_ok=True)
+    file_name = "../data/ZRH_Departure_Delays_2025.csv"
     df_final.to_csv(file_name, index=False)
     print(f"Data successfully saved to your computer as '{file_name}'. We are done with the API phase!")
 else:

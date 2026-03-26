@@ -3,6 +3,8 @@ import pandas as pd
 import warnings
 import time
 from datetime import datetime
+from pathlib import Path
+
 
 # Suppress SSL warnings on Mac
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -54,7 +56,8 @@ for current_date in date_list:
 if all_flights:
     df_final = pd.DataFrame(all_flights)
     # Saving with a new name to distinguish from the previous version
-    file_name = "ZRH_All_Flights_Inc_Canceled_2025.csv"
+    Path("../data").mkdir(parents=True, exist_ok=True)
+    file_name = "../data/ZRH_All_Flights_Inc_Canceled_2025.csv"
     df_final.to_csv(file_name, index=False)
     print(f"\n🎉 SUCCESS! Data saved as '{file_name}'")
     print("Total flights (including potential cancellations):", len(df_final))

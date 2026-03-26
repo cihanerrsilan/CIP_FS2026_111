@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import ast
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
-
 
 def safe_parse(x):
     if isinstance(x, dict):
@@ -16,9 +16,9 @@ def safe_parse(x):
 
 
 print("Loading files...")
-
-df1 = pd.read_csv("ZRH_Departure_Delays_2025.csv")
-df2 = pd.read_csv("ZRH_All_Flights_Inc_Canceled_2025.csv")
+Path("../data").mkdir(parents=True, exist_ok=True)
+df1 = pd.read_csv("../data/ZRH_Departure_Delays_2025.csv")
+df2 = pd.read_csv("../data/ZRH_All_Flights_Inc_Canceled_2025.csv")
 
 df1["source"] = "delays"
 df2["source"] = "all_flights"
@@ -134,7 +134,7 @@ df = df.drop(columns=[
 ], errors="ignore")
 
 # save cleaned dataset
-df.to_csv("ZRH_Cleaned_Flights_2025.csv", index=False)
+df.to_csv("../data/ZRH_Cleaned_Flights_2025.csv", index=False)
 
 print("Cleaned dataset saved as ZRH_Cleaned_Flights_2025.csv")
 print("Final shape:", df.shape)
