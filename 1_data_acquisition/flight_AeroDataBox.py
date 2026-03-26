@@ -4,12 +4,20 @@ import warnings
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load variables from the .env file
+load_dotenv()
+
+# Get the API key from the environment variable
+api_key = os.getenv("RAPIDAPI_KEY")
 
 # Suppress SSL warnings on Mac
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 headers = {
-    "x-rapidapi-key": "2818be0ac3msh07bed8a4ea154edp19c29ajsn8fdea3b5d9e8",
+    "x-rapidapi-key": api_key,
     "x-rapidapi-host": "aerodatabox.p.rapidapi.com"
 }
 
