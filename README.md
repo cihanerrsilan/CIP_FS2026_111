@@ -152,6 +152,7 @@ CIP_FS2026_111/
 │   └── cip_pipeline_final.py     # Full cleaning
 ├── 3_analysis_modelling/
 │   └── cip_pipeline_final.py     # Visualizations & regression models
+├── data
 ├── .env                          
 ├── .gitignore
 ├── requirements.txt
