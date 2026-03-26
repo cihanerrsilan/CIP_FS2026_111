@@ -149,10 +149,11 @@ CIP_FS2026_111/
 │   ├── flight_AeroDataBox.py     # Fetches departed flights from the API
 │   └── flight_cancel.py          # Same but includes cancelled flights
 ├── 2_cleaning_transformation/
-│   └── cip_pipeline_final.py     # Full cleaning, feature engineering & export
+│   └── cip_pipeline_final.py     # Full cleaning
 ├── 3_analysis_modelling/
 │   └── cip_pipeline_final.py     # Visualizations & regression models
-├── .env                          # Your API key goes here (not on GitHub!)
+├── data
+├── .env                          
 ├── .gitignore
 ├── requirements.txt
 └── README.md
