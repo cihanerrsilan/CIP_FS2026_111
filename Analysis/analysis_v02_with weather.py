@@ -31,61 +31,55 @@ plt.title("Weather Variables Correlation with Delay")
 plt.savefig("../outputs/weather_correlation.png", dpi=150, bbox_inches="tight")
 plt.show()
 
-# ── 2. Box plot: Delay by Wind Speed group ────────────────────────
+# ── 2. Bar chart: Average Delay by Wind Speed group ───────────────
 df_weather["wind_bin"] = pd.cut(
     df_weather["wind_speed_kmh"],
     bins=[0, 10, 20, 30, 100],
     labels=["0-10", "10-20", "20-30", "30+"]
 )
 
-fig, ax = plt.subplots(figsize=(10, 5))
-wind_groups = [df_weather[df_weather["wind_bin"] == b]["delay_min"].dropna() for b in ["0-10", "10-20", "20-30", "30+"]]
-bp = ax.boxplot(wind_groups, labels=["0-10", "10-20", "20-30", "30+"], patch_artist=True, showfliers=False)
-for patch in bp["boxes"]:
-    patch.set_facecolor("steelblue")
-ax.set_title("Delay Distribution by Wind Speed Group")
+fig, ax = plt.subplots(figsize=(8, 4))
+df_weather.groupby("wind_bin", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
+ax.set_title("Average Delay by Wind Speed Group")
 ax.set_xlabel("Wind Speed (km/h)")
-ax.set_ylabel("Delay (min)")
+ax.set_ylabel("Avg Delay (min)")
 ax.grid(False)
-plt.savefig("../outputs/boxplot_wind.png", dpi=150, bbox_inches="tight")
+plt.xticks(rotation=0)
+plt.savefig("../outputs/bar_wind.png", dpi=150, bbox_inches="tight")
 plt.show()
 
-# ── 3. Box plot: Delay by Temperature group ───────────────────────
+# ── 3. Bar chart: Average Delay by Temperature group ─────────────
 df_weather["temp_bin"] = pd.cut(
     df_weather["temperature_C"],
     bins=[-20, -5, 0, 5, 10, 20],
     labels=["Below -5", "-5 to 0", "0 to 5", "5 to 10", "Above 10"]
 )
 
-fig, ax = plt.subplots(figsize=(10, 5))
-temp_groups = [df_weather[df_weather["temp_bin"] == b]["delay_min"].dropna() for b in ["Below -5", "-5 to 0", "0 to 5", "5 to 10", "Above 10"]]
-bp = ax.boxplot(temp_groups, labels=["Below -5", "-5 to 0", "0 to 5", "5 to 10", "Above 10"], patch_artist=True, showfliers=False)
-for patch in bp["boxes"]:
-    patch.set_facecolor("steelblue")
-ax.set_title("Delay Distribution by Temperature Group")
+fig, ax = plt.subplots(figsize=(8, 4))
+df_weather.groupby("temp_bin", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
+ax.set_title("Average Delay by Temperature Group")
 ax.set_xlabel("Temperature (°C)")
-ax.set_ylabel("Delay (min)")
+ax.set_ylabel("Avg Delay (min)")
 ax.grid(False)
-plt.savefig("../outputs/boxplot_temp.png", dpi=150, bbox_inches="tight")
+plt.xticks(rotation=0)
+plt.savefig("../outputs/bar_temp.png", dpi=150, bbox_inches="tight")
 plt.show()
 
-# ── 4. Box plot: Delay by Precipitation group ─────────────────────
+# ── 4. Bar chart: Average Delay by Precipitation group ───────────
 df_weather["precip_bucket"] = pd.cut(
     df_weather["precipitation_mm"],
-    bins=[-0.1, 0, 1, 5, 10, 100],
-    labels=["None", "Trace(<1mm)", "Light(1-5mm)", "Moderate(5-10mm)", "Heavy(>10mm)"]
+    bins=[-0.1, 0, 0.5, 1, 5],
+    labels=["None", "Trace(<0.5mm)", "Light(0.5-1mm)", "Moderate(1-5mm)"]
 )
 
-fig, ax = plt.subplots(figsize=(10, 5))
-precip_groups = [df_weather[df_weather["precip_bucket"] == b]["delay_min"].dropna() for b in ["None", "Trace(<1mm)", "Light(1-5mm)", "Moderate(5-10mm)", "Heavy(>10mm)"]]
-bp = ax.boxplot(precip_groups, labels=["None", "Trace(<1mm)", "Light(1-5mm)", "Moderate(5-10mm)", "Heavy(>10mm)"], patch_artist=True, showfliers=False)
-for patch in bp["boxes"]:
-    patch.set_facecolor("steelblue")
-ax.set_title("Delay Distribution by Precipitation Level")
+fig, ax = plt.subplots(figsize=(8, 4))
+df_weather.groupby("precip_bucket", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
+ax.set_title("Average Delay by Precipitation Level")
 ax.set_xlabel("Precipitation")
-ax.set_ylabel("Delay (min)")
+ax.set_ylabel("Avg Delay (min)")
 ax.grid(False)
-plt.savefig("../outputs/boxplot_precip.png", dpi=150, bbox_inches="tight")
+plt.xticks(rotation=0)
+plt.savefig("../outputs/bar_precip.png", dpi=150, bbox_inches="tight")
 plt.show()
 
 # ── 5. Regression: with vs without weather ────────────────────────
