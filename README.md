@@ -150,7 +150,7 @@ pip install -r requirements.txt
 
 ````
 CIP_FS2026_111/
-├── 1_data_acquisition/
+├── 1_data_acquisition
 ├── 2_cleaning_transformation  
 ├── 3_analysis
 ├── 4_dashboard
