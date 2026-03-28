@@ -123,7 +123,8 @@ plt.show()
 
 print("\nAll outputs saved to /outputs/")
 
-#the random forest may create a bias of importance because of the many unique numerical values apperantly that may be the reason why heap map has low correlation too
+#the random forest may create a bias of importance because of the many unique numerical values
+# apparently that may be the reason why heap map has low correlation too
 #indeed the scatter plot shows NO trend whatsoever. so that was the bias...
 #The relationship is weak and largely structureless.
 # The Random Forest was exploiting the many split points available in this continuous feature rather
