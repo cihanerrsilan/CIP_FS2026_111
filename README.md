@@ -159,6 +159,15 @@ CIP_FS2026_111/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+````
 
+---
+
+## Academic Context
+This project was developed as part of the **Master of Science in Data Science** program at the **Lucerne University of Applied Sciences and Arts (HSLU)**, specifically for the *Data Collection, Integration and Preprocessing (CIP)* course. 
+
+* **Author / Contributor:** Hanieh Jebeli · Elif Gürçinar · Silan Cihaner (FS2026 - Group 111)
+* **Methodology:** End-to-end data pipeline engineering, predictive modeling (Random Forest), and interactive dashboard deployment.
+* **Primary Data Sources:** Aviation metrics via AeroDataBox API & localized meteorological data via Open-Meteo API.
  
 
