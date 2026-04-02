@@ -134,7 +134,19 @@ Several fields contain nested information stored as strings. These values are pa
 ```bash
 streamlit run streamlit_app.py
 ```
- 
+
+---
+
+## Live Interactive Dashboard
+Instead of a static report, you can access the full predictive analytics suite and interactive visualizations directly via Streamlit Cloud:
+
+**(https://zrh-flight-delay.streamlit.app)**
+
+### Key Interactive Features:
+* **Real-Time Inference:** Input live weather and flight data to receive instant delay predictions based on our trained machine learning models.
+* **Dynamic Data Exploration:** Explore historical trends, feature importances ($R^2$, RMSE), and flight distributions through interactive Plotly charts.
+* **Integrated Pipeline:** Experience the end-to-end data science lifecycle, from automated API-driven acquisition (AeroDataBox & Open-Meteo) to final model deployment.
+
 ---
 ## Requirements
  
