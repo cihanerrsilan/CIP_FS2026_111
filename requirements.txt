@@ -1,9 +1,17 @@
+# --- Core Data & Machine Learning ---
 pandas
 numpy
 scikit-learn
+
+# --- Data Acquisition & APIs ---
 requests
+requests-cache
 beautifulsoup4
+
+# --- Visualization ---
 matplotlib
 seaborn
 plotly
+
+# --- Web Dashboard ---
 streamlit
