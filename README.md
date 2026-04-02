@@ -140,7 +140,7 @@ streamlit run streamlit_app.py
 ## Live Interactive Dashboard
 Instead of a static report, you can access the full predictive analytics suite and interactive visualizations directly via Streamlit Cloud:
 
-**(https://zrh-flight-delay.streamlit.app)**
+**https://zrh-flight-delay.streamlit.app**
 
 ### Key Interactive Features:
 * **Real-Time Inference:** Input live weather and flight data to receive instant delay predictions based on our trained machine learning models.
