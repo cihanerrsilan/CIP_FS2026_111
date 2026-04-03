@@ -7,14 +7,14 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_score, mean_squared_error
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from pathlib import Path
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
 
 
 Path("../outputs").mkdir(parents=True, exist_ok=True)
-
+import glob
+for f in glob.glob("../outputs/*.png"):
+    os.remove(f)
 # FONT SIZE SETTINGS  (required by SW04 lecture)
 # These three variables control ALL text sizes in every figure below.
 # Changing BIGGER_SIZE here automatically updates every title in the script.
@@ -91,7 +91,7 @@ def evaluate(name, model, X_train, X_test, y_train, y_test):
     print(f"  R²   : {r2:.4f}       ({r2 * 100:.1f}% of delay variance explained by the model)")
 
     return model, preds
-# 1. Weather correlation heatmap
+# 1. - Weather correlation heatmap
 weather_cols = ["delay_min", "temperature_C", "precipitation_mm", "wind_speed_kmh"]
 # plt.figure(figsize=(6, 5))
 # sns.heatmap(df_weather[weather_cols].corr(), annot=True, fmt=".2f", cmap="coolwarm")
@@ -223,21 +223,38 @@ print("✅ Figure 3 saved — Delay by temperature group")
 # plt.show()
 
 # 4. Bar chart: Average Delay by Precipitation group
+# Previously used the old plotting style. Now fully consistent with Figs 2 & 3.
 df_weather["precip_bucket"] = pd.cut(
     df_weather["precipitation_mm"],
     bins=[-0.1, 0, 0.5, 1, 999],
-    labels=["None", "Trace(<0.5mm)", "Light(0.5-1mm)", "Moderate(>1 mm)"]
+    labels=["None", "Trace (< 0.5 mm)", "Light (0.5–1 mm)", "Moderate (> 1 mm)"]
 )
+precip_avg = df_weather.groupby("precip_bucket", observed=True)["delay_min"].agg(["mean", "count"])
 
-fig, ax = plt.subplots(figsize=(8, 4))
-df_weather.groupby("precip_bucket", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
-ax.set_title("Average Delay by Precipitation Level")
-ax.set_xlabel("Precipitation")
-ax.set_ylabel("Avg Delay (min)")
-ax.grid(False)
+fig4, ax4 = plt.subplots(figsize=(9, 5))
+bars = ax4.bar(
+    precip_avg.index, precip_avg["mean"],
+    color=PALETTE[:len(precip_avg)], edgecolor="white", width=0.6
+)
+for bar, (_, row) in zip(bars, precip_avg.iterrows()):
+    ax4.text(
+        bar.get_x() + bar.get_width() / 2,
+        bar.get_height() + 0.15,
+        f"n={int(row['count']):,}",
+        ha="center", fontsize=SMALL_SIZE
+    )
+ax4.axhline(overall_mean, color=RED, lw=1.5, ls="--",
+            label=f"Overall mean = {overall_mean:.1f} min")
+ax4.set_xlabel("Precipitation Level")
+ax4.set_ylabel("Average Delay [min]")
+ax4.set_title("Figure 4 – Average Departure Delay by Precipitation Level", fontweight="bold")
+ax4.legend()
+ax4.grid(axis="y", alpha=0.3)
 plt.xticks(rotation=0)
-plt.savefig("../outputs/bar_precip.png", dpi=150, bbox_inches="tight")
-plt.show()
+fig4.tight_layout()
+fig4.savefig("../outputs/fig4_bar_precip.png", dpi=150, bbox_inches="tight")
+plt.close(fig4)  # FIX: was plt.show() — blocks execution in batch mode
+print("✅ Figure 4 saved — Delay by precipitation level")
 
 # 5. Regression: with vs without weather
 # We compare 4 models:
@@ -248,130 +265,75 @@ plt.show()
 # This directly answers Research Question:
 # Does adding weather data improve prediction accuracy?
 
-features_no_weather   = ["dep_hour", "dep_dow", "dep_month", "is_weekend", "route_avg_delay"]
-features_with_weather = features_no_weather + ["temperature_C", "precipitation_mm", "wind_speed_kmh"]
-# Drop rows where ANY of the weather features are missing.
-# This ensures all 4 models are trained and tested on exactly the same rows,
-# making the comparison fair.
-df_w  = df_weather[features_with_weather + ["delay_min"]].dropna()
-X_no  = df_w[features_no_weather]
-X_yes = df_w[features_with_weather]
+# Reuse df_weather (already filtered). Drop rows with any missing weather feature.
+# This ensures all 4 models are trained/tested on exactly the same rows (fair comparison).
+FEATURES_BASE    = ["dep_hour", "dep_dow", "dep_month", "is_weekend", "route_avg_delay"]
+FEATURES_WEATHER = FEATURES_BASE + ["temperature_C", "precipitation_mm", "wind_speed_kmh"]
+
+df_w  = df_weather[FEATURES_WEATHER + ["delay_min"]].dropna()
+X_no  = df_w[FEATURES_BASE]
+X_yes = df_w[FEATURES_WEATHER]
 y_w   = df_w["delay_min"]
 
 X_tr_n, X_te_n, y_tr_w, y_te_w = train_test_split(X_no,  y_w, test_size=0.2, random_state=42)
 X_tr_y, X_te_y, _,      _      = train_test_split(X_yes, y_w, test_size=0.2, random_state=42)
 
+print("\n═══ Model Comparison ═══")
 evaluate("LR – Without Weather", LinearRegression(), X_tr_n, X_te_n, y_tr_w, y_te_w)
 evaluate("LR – With Weather",    LinearRegression(), X_tr_y, X_te_y, y_tr_w, y_te_w)
 evaluate("RF – Without Weather", RandomForestRegressor(n_estimators=100, random_state=42), X_tr_n, X_te_n, y_tr_w, y_te_w)
-evaluate("RF – With Weather",    RandomForestRegressor(n_estimators=100, random_state=42), X_tr_y, X_te_y, y_tr_w, y_te_w)
 
-print("\nAll outputs saved to /outputs/")
-
-# FIGURE 6 — Feature Importance (Random Forest with weather)
-# Random Forest stores how much each feature reduced impurity across all trees.
-# A high importance means the model leaned heavily on that feature.
-# This answers Research Question 3: which variables matter most?
-
-df = pd.read_csv("../data/ZRH_Flights_with_Weather_2025.csv")
-# Create binary target from delay minutes
-# 1 = delayed, 0 = not delayed
-df["delay_binary"] = (df["delay_min"] > 5).astype(int)
-# Define features
-features_with_weather = [
-    "dep_hour",
-    "dep_dow",
-    "dep_month",
-    "is_weekend",
-    "route_avg_delay",
-    "temperature_C",
-    "precipitation_mm",
-    "wind_speed_kmh"
-]
-# Keep only needed columns and drop missing values
-df_model = df[features_with_weather + ["delay_binary"]].dropna()
-
-X_yes = df_model[features_with_weather]
-y_yes = df_model["delay_binary"]
-rf_yes = RandomForestClassifier(
-    n_estimators=200,
-    random_state=42,
-    n_jobs=-1
+# Keep the fitted RF+Weather model — reused for Figures 6 & 7 (FIX #1 & #2)
+rf_weather_model, rf_weather_preds = evaluate(
+    "RF – With Weather",
+    RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1),
+    X_tr_y, X_te_y, y_tr_w, y_te_w
 )
-rf_yes.fit(X_yes, y_yes)
 
-os.makedirs("../outputs", exist_ok=True)
 
-importances = pd.Series(
-    rf_yes.feature_importances_,
-    index=features_with_weather
-).sort_values(ascending=True)
-
+# ── FIGURE 6 — Feature Importance from Regression RF (FIX #1 & #2) ──────────
+# FIX #1: was RandomForestClassifier on binary target — now uses the
+#          regression RF fitted above, consistent with the model comparison.
+# FIX #2: was re-reading raw CSV without filters — now uses already-filtered data.
 feat_labels = {
-    "dep_hour": "Departure Hour",
-    "dep_dow": "Day of Week",
-    "dep_month": "Month",
-    "is_weekend": "Weekend Flag",
-    "route_avg_delay": "Route Avg Delay",
-    "temperature_C": "Temperature [°C]",
+    "dep_hour":         "Departure Hour",
+    "dep_dow":          "Day of Week",
+    "dep_month":        "Month",
+    "is_weekend":       "Weekend Flag",
+    "route_avg_delay":  "Route Avg Delay",
+    "temperature_C":    "Temperature [°C]",
     "precipitation_mm": "Precipitation [mm]",
-    "wind_speed_kmh": "Wind Speed [km/h]"
+    "wind_speed_kmh":   "Wind Speed [km/h]"
 }
+importances = pd.Series(
+    rf_weather_model.feature_importances_,
+    index=FEATURES_WEATHER
+).sort_values(ascending=True)
 importances.index = [feat_labels.get(f, f) for f in importances.index]
 
 fig6, ax6 = plt.subplots(figsize=(9, 5))
 ax6.barh(importances.index, importances.values, color=PURPLE, edgecolor="white")
 ax6.set_xlabel("Feature Importance [-]")
 ax6.set_title(
-    "Figure 6 – Feature Importance  |  Random Forest (with weather features)\n"
-    "Higher = model relied more on this feature to predict delay",
+    "Figure 6 – Feature Importance  |  Random Forest Regressor (with weather)\n"
+    "Higher = model relied more on this feature to predict departure delay",
     fontweight="bold"
 )
 ax6.grid(axis="x", alpha=0.3)
 fig6.tight_layout()
 fig6.savefig("../outputs/fig6_feature_importance.png", dpi=150, bbox_inches="tight")
 plt.close(fig6)
-
 print("\n✅ Figure 6 saved — Feature importance")
 print(importances)
+
 
 # FIGURE 7 — Actual vs Predicted (best model: RF with weather)
 # A scatter of actual vs predicted delay shows how well the model performs.
 # Perfect predictions would lie exactly on the red dashed diagonal line.
 # Clusters far from the line reveal where the model struggles most
 
-features_with_weather = [
-    "dep_hour",
-    "dep_dow",
-    "dep_month",
-    "is_weekend",
-    "route_avg_delay",
-    "temperature_C",
-    "precipitation_mm",
-    "wind_speed_kmh"
-]
+rf_preds_w = rf_weather_preds  # already computed when we called evaluate()
 
-df_model = df[features_with_weather + ["delay_min"]].dropna()
-
-X_with_weather = df_model[features_with_weather]
-y = df_model["delay_min"]
-
-X_tr_w, X_te_w, y_tr_w, y_te_w = train_test_split(
-    X_with_weather,
-    y,
-    test_size=0.2,
-    random_state=42
-)
-
-rf_yes = RandomForestRegressor(
-    n_estimators=200,
-    random_state=42,
-    n_jobs=-1
-)
-
-rf_yes.fit(X_tr_w, y_tr_w)
-
-rf_preds_w = rf_yes.predict(X_te_w)
 fig7, ax7 = plt.subplots(figsize=(6, 6))
 
 n_sample = min(1500, len(y_te_w))
@@ -380,27 +342,14 @@ sample_idx = np.random.default_rng(42).choice(len(y_te_w), size=n_sample, replac
 ax7.scatter(
     y_te_w.iloc[sample_idx],
     rf_preds_w[sample_idx],
-    alpha=0.25,
-    s=12,
-    color=BLUE
+    alpha=0.25, s=12, color=BLUE
 )
-
-lim = max(
-    abs(y_te_w.iloc[sample_idx]).max(),
-    abs(rf_preds_w[sample_idx]).max()
-)
-
-ax7.plot(
-    [-lim, lim], [-lim, lim],
-    color=RED, lw=1.5, ls="--",
-    label="Perfect prediction"
-)
-
+lim = max(abs(y_te_w.iloc[sample_idx]).max(), abs(rf_preds_w[sample_idx]).max())
+ax7.plot([-lim, lim], [-lim, lim], color=RED, lw=1.5, ls="--", label="Perfect prediction")
 ax7.set_xlabel("Actual Delay [min]")
 ax7.set_ylabel("Predicted Delay [min]")
 ax7.set_title(
-    "Figure 7 – Actual vs Predicted Delay\n"
-    "Random Forest with weather features",
+    "Figure 7 – Actual vs Predicted Delay\nRandom Forest with weather features",
     fontweight="bold"
 )
 ax7.legend()
@@ -408,23 +357,8 @@ ax7.grid(alpha=0.2)
 fig7.tight_layout()
 fig7.savefig("../outputs/fig7_actual_vs_predicted.png", dpi=150, bbox_inches="tight")
 plt.close(fig7)
-
 print("✅ Figure 7 saved — Actual vs predicted")
 
 
 
 print("\nAll outputs saved to ../outputs/")
-print("\nSummary of fixes applied to original analysis_v02_with_weather.py:")
-print("  1. root_mean_squared_error replaced with mean_squared_error ** 0.5")
-print("     (compatible with all sklearn versions)")
-print("  2. Two separate train_test_split calls replaced with one shared split")
-print("     (ensures all models compared on identical test rows)")
-print("  3. Bin upper edges raised to 999 in all pd.cut() calls")
-print("     (prevents silently dropping flights with extreme values)")
-print("  4. SW04 font size settings added (SMALL/MEDIUM/BIGGER_SIZE + plt.rc)")
-print("  5. Axis labels now include units in square brackets [min], [°C], [km/h]")
-print("  6. Overall-mean reference line added to all bar charts")
-print("  7. Sample count (n=) labels added to all bar charts")
-print("  8. center=0 added to heatmap (zero correlation = white, not arbitrary colour)")
-print("  9. Column names renamed to human-readable labels in heatmap")
-print(" 10. Feature importance and actual-vs-predicted figures added")
