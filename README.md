@@ -1,44 +1,3 @@
-[//]: # ()
-[//]: # (# CIP_Group_Project_111)
-
-[//]: # (Data Collection Integration and Preprocessing: Analysis and Prediction of Flight Departure Delays at Zurich Airport &#40;ZRH&#41;)
-
-[//]: # ()
-[//]: # (## CSV Data Mapping & Solutions)
-
-[//]: # ()
-[//]: # (Here is how your CSV columns match your research goals:)
-
-[//]: # ()
-[//]: # (Target Variable &#40;Delay in Minutes&#41;:)
-
-[//]: # ()
-[//]: # (Data Source: The departure column.)
-
-[//]: # ()
-[//]: # (How to solve: Inside the departure column, you have scheduledTime and revisedTime. By calculating the difference between these two timestamps &#40;Revised - Scheduled&#41;, you can create the "Delay" column which is your target for regression.)
-
-[//]: # ()
-[//]: # (Route-Level Analysis &#40;Research Question 2&#41;:)
-
-[//]: # ()
-[//]: # (Data Source: The arrival column.)
-
-[//]: # ()
-[//]: # (How to solve: This column contains the destination airport's IATA/ICAO codes &#40;e.g., 'HER', 'GRU'&#41;. You can group your data by these codes to calculate the "historical average delay" for each specific route.)
-
-[//]: # ()
-[//]: # (Operational Predictors &#40;Research Question 3&#41;:)
-
-[//]: # ()
-[//]: # (Data Source: airline, aircraft, and isCargo columns.)
-
-[//]: # ()
-[//]: # (How to solve: You have specific aircraft models &#40;e.g., Airbus A320&#41;, airline names &#40;e.g., Edelweiss Air&#41;, and the cargo status. These are the "features" &#40;independent variables&#41; you planned to use in your model.)
-
-[//]: # ()
-
-
 # ✈️ Flight Departure Delay Analysis – Zurich Airport (ZRH)
 ### CIP Group Project 111 | FS2026
 **Hanieh Jebeli · Elif Gürçinar · Silan Cihaner**
@@ -117,6 +76,7 @@ Several fields contain nested information stored as strings. These values are pa
 2. Does adding weather data improve prediction accuracy?
 3. Which variables most strongly influence departure delay?
  
+>**Note on Findings**: Our findings and answers to the above research questions are addressed in details in the documentation file.
 ---
  
 ## What the Code Does
@@ -129,12 +89,17 @@ Several fields contain nested information stored as strings. These values are pa
  
 **4. Predictive Modelling** — Four models (Linear Regression and Random Forest × Baseline and +Weather) are compared on an 80/20 split. Best result: **LR +Weather** (MAE = 7.07 min, R² = 0.066). Route average delay is the strongest predictor.
  
+>**Note on R²**: Best model explains ~6.6% of delay variance.
+>Expected — most delays at hub airports like ZRH come from factors not in pre-departure data (e.g., inbound aircraft delay, crew rotation, reactionary network delays).
+
+
 **5. Interactive Dashboard** — `dashboard.py` is a Streamlit + Plotly dashboard with four tabs (Delay Explorer, Weather Analysis, Predictive Modelling, Live Predictor).
  
 ```bash
-streamlit run streamlit_app.py
+streamlit run 4_dashboard/dashboard.py
 ```
-
+The app opens automatically at `http://localhost:8501`.
+To disable auto-open: `streamlit run 4_dashboard/dashboard.py --server.headless true`
 ---
 
 ## Live Interactive Dashboard
@@ -180,7 +145,7 @@ CIP_FS2026_111/
 This project was developed as part of the **Master of Science in Data Science** program at the **Lucerne University of Applied Sciences and Arts (HSLU)**, specifically for the *Data Collection, Integration and Preprocessing (CIP)* course. 
 
 * **Author / Contributor:** Hanieh Jebeli · Elif Gürçinar · Silan Cihaner (FS2026 - Group 111)
-* **Methodology:** End-to-end data pipeline engineering, predictive modeling (Random Forest), and interactive dashboard deployment.
+* **Methodology:** End-to-end data pipeline engineering, predictive modeling (Linear Regressio & Random Forest), and interactive dashboard deployment.
 * **Primary Data Sources:** Aviation metrics via AeroDataBox API & localized meteorological data via Open-Meteo API.
  
 
