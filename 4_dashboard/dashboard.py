@@ -26,7 +26,6 @@ C_RED    = "#EF4444"
 C_GREEN  = "#10B981"
 C_PURPLE = "#8B5CF6"
 C_CYAN   = "#06B6D4"
-C_DARK   = "#0F172A"
 C_PANEL  = "#1E293B"
 C_TEXT   = "#E2E8F0"
 C_MUTED  = "#94A3B8"
@@ -276,8 +275,8 @@ def run_models(df: pd.DataFrame):
     for name, model, Xtr, Xte in [
         ("Linear Regression\n(Baseline)",     LinearRegression(),                               X_tr_b, X_te_b),
         ("Linear Regression\n(+ Weather)",    LinearRegression(),                               X_tr_w, X_te_w),
-        ("Random Forest\n(Baseline)",         RandomForestRegressor(100, random_state=42, n_jobs=-1), X_tr_b, X_te_b),
-        ("Random Forest\n(+ Weather)",        RandomForestRegressor(100, random_state=42, n_jobs=-1), X_tr_w, X_te_w),
+        ("Random Forest\n(Baseline)",         RandomForestRegressor(200, random_state=42, n_jobs=-1), X_tr_b, X_te_b),
+        ("Random Forest\n(+ Weather)",        RandomForestRegressor(200, random_state=42, n_jobs=-1), X_tr_w, X_te_w),
     ]:
         model.fit(Xtr, y_tr)
         preds = model.predict(Xte)
@@ -777,9 +776,12 @@ with tab3:
         st.markdown(table_html, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
+        best_row = results_df.loc[best_r2_idx]
+        best_name = best_row["Model"].replace("\n", " ")
+        best_r2 = best_row["R²"]
         st.markdown(
-            '<div class="insight-box">★ <b>Best model:</b> Linear Regression + Weather '
-            '(R² = 0.066). Weather adds only marginal improvement (+1.3 pp R²).<br><br>'
+            f'<div class="insight-box">★ <b>Best model:</b> {best_name} '
+            f'(R² = {best_r2:.3f}). Weather adds only marginal improvement (+1.3 pp R²).<br><br>'
             '⚠️ Low overall R² (~0.05–0.07) is expected: most delay variance comes from '
             'cascading network effects not observable before departure.</div>',
             unsafe_allow_html=True
@@ -897,8 +899,8 @@ with tab4:
         dep_dow   = st.selectbox("Day of Week",
                                   options=list(range(7)),
                                   format_func=lambda x: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"][x])
-        dep_month = st.selectbox("Month", [10, 11, 12],
-                                  format_func=lambda x: {10:"October",11:"November",12:"December"}[x])
+        dep_month = st.selectbox("Month", sorted(df["dep_month"].unique()),
+                                 format_func=lambda x: {10: "October", 11: "November", 12: "December"}.get(x, str(x)))
         is_weekend = 1 if dep_dow >= 5 else 0
         st.caption(f"Weekend: {'Yes ✓' if is_weekend else 'No'}")
 
@@ -979,7 +981,7 @@ with tab4:
     fig_gauge = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=gauge_val,
-        delta={"reference": overall_mean, "suffix": " min vs fleet avg",
+        delta={"reference": filtered_mean, "suffix": " min vs fleet avg",
                "increasing": {"color": C_RED}, "decreasing": {"color": C_GREEN}},
         number={"suffix": " min", "font": {"size": 42, "family": "Space Mono", "color": C_TEXT}},
         gauge={
