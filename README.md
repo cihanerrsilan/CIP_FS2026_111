@@ -123,13 +123,13 @@ Several fields contain nested information stored as strings. These values are pa
  
 **1. Data Acquisition** — Two scripts fetch flight data from the AeroDataBox API via Apify: one for departed flights, one including cancellations. Results are exported as raw CSVs.
  
-**2. Cleaning and Transformation** — `cip_pipeline_final.py` merges the raw files, parses nested JSON columns, computes `delay_min`, flags outliers, derives temporal and route features, joins Open-Meteo weather data, and exports the final dataset.
+**2. Cleaning and Transformation** — `cip_pipeline.py` merges the raw files, parses nested JSON columns, computes `delay_min`, flags outliers, derives temporal and route features, joins Open-Meteo weather data, and exports the final dataset.
  
 **3. Analysis and Visualisation** — `analysis_v02_with_weather.py` produces weather correlation and delay-by-group charts using matplotlib and seaborn, following SW04 formatting conventions.
  
 **4. Predictive Modelling** — Four models (Linear Regression and Random Forest × Baseline and +Weather) are compared on an 80/20 split. Best result: **LR +Weather** (MAE = 7.07 min, R² = 0.066). Route average delay is the strongest predictor.
  
-**5. Interactive Dashboard** — `streamlit_app.py` is a Streamlit + Plotly dashboard with four tabs (Delay Explorer, Weather Analysis, Predictive Modelling, Live Predictor).
+**5. Interactive Dashboard** — `dashboard.py` is a Streamlit + Plotly dashboard with four tabs (Delay Explorer, Weather Analysis, Predictive Modelling, Live Predictor).
  
 ```bash
 streamlit run streamlit_app.py
@@ -166,6 +166,7 @@ CIP_FS2026_111/
 ├── 2_cleaning_transformation  
 ├── 3_analysis
 ├── 4_dashboard
+├── 5_final_documentation
 ├── data
 ├── outputs
 ├── .gitignore
