@@ -38,37 +38,21 @@ GREEN = "#10B981"
 PURPLE = "#8B5CF6"
 PALETTE = [BLUE, ORANGE, RED, GREEN, PURPLE]
 
-# df_weather = pd.read_csv("../data/ZRH_Flights_with_Weather_2025.csv")
 # FIX: added parse_dates so scheduled_utc is read as a proper datetime object
 # and not as a plain string. This matters if we ever filter by date later.
 df_weather = pd.read_csv(
     "../data/ZRH_Flights_with_Weather_2025.csv",
     parse_dates=["scheduled_utc"]
 )
-##df_weather = df_weather[df_weather["is_outlier"] == False].copy()
-# Keep only non-outlier flights.
-# is_outlier was flagged during cleaning using ±3 IQR on delay_min.
-# Keeping outliers would skew the averages in the bar charts and inflate RMSE.
+
 df_weather = df_weather[df_weather["is_outlier"] == False].copy()
 
-##df_weather = df_weather[df_weather["delay_min"].between(-60, 300)].
 # Further restrict to a realistic delay window of -60 to +300 minutes.
 # Values outside this range are almost certainly data errors (e.g. revised time
 # being the next day's flight), not genuine extreme delays.
 df_weather = df_weather[df_weather["delay_min"].between(-60, 300)].copy()
 print(f"Rows after filtering: {len(df_weather):,}")
 print(f"Average delay: {df_weather['delay_min'].mean():.1f} min")
-
-# def evaluate(name, model, X_train, X_test, y_train, y_test):
-#     model.fit(X_train, y_train)
-#     preds = model.predict(X_test)
-#     print(f"\n── {name} ──")
-#     print(f"  MAE:  {mean_absolute_error(y_test, preds):.2f}")
-#     print(f"  RMSE: {root_mean_squared_error(y_test, preds):.2f}")
-#     print(f"  R²:   {r2_score(y_test, preds):.4f}")
-#     return model
-
-
 
 def evaluate(name, model, X_train, X_test, y_train, y_test):
     """
@@ -93,11 +77,6 @@ def evaluate(name, model, X_train, X_test, y_train, y_test):
     return model, preds
 # 1. - Weather correlation heatmap
 weather_cols = ["delay_min", "temperature_C", "precipitation_mm", "wind_speed_kmh"]
-# plt.figure(figsize=(6, 5))
-# sns.heatmap(df_weather[weather_cols].corr(), annot=True, fmt=".2f", cmap="coolwarm")
-# plt.title("Weather Variables Correlation with Delay")
-# plt.savefig("../outputs/weather_correlation.png", dpi=150, bbox_inches="tight")
-# plt.show()
 readable = {
     "delay_min": "Delay [min]",
     "temperature_C": "Temperature [°C]",
@@ -168,16 +147,6 @@ fig2.savefig("../outputs/fig2_bar_wind.png", dpi=150, bbox_inches="tight")
 plt.close(fig2)
 print("✅ Figure 2 saved — Delay by wind speed group")
 
-# fig, ax = plt.subplots(figsize=(8, 4))
-# df_weather.groupby("wind_bin", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
-# ax.set_title("Average Delay by Wind Speed Group")
-# ax.set_xlabel("Wind Speed (km/h)")
-# ax.set_ylabel("Avg Delay (min)")
-# ax.grid(False)
-# plt.xticks(rotation=0)
-# plt.savefig("../outputs/bar_wind.png", dpi=150, bbox_inches="tight")
-# plt.show()
-
 #  3. Bar chart: Average Delay by Temperature group
 # FIX: extended upper bound from 20 to 99 to capture any unseasonably warm hours.
 # Oct–Dec at ZRH rarely exceeds 20°C but it is possible in early October.
@@ -212,15 +181,6 @@ fig3.tight_layout()
 fig3.savefig("../outputs/fig3_bar_temp.png", dpi=150, bbox_inches="tight")
 plt.close(fig3)
 print("✅ Figure 3 saved — Delay by temperature group")
-# fig, ax = plt.subplots(figsize=(8, 4))
-# df_weather.groupby("temp_bin", observed=True)["delay_min"].mean().plot(kind="bar", ax=ax, color="steelblue")
-# ax.set_title("Average Delay by Temperature Group")
-# ax.set_xlabel("Temperature (°C)")
-# ax.set_ylabel("Avg Delay (min)")
-# ax.grid(False)
-# plt.xticks(rotation=0)
-# plt.savefig("../outputs/bar_temp.png", dpi=150, bbox_inches="tight")
-# plt.show()
 
 # 4. Bar chart: Average Delay by Precipitation group
 # Previously used the old plotting style. Now fully consistent with Figs 2 & 3.
@@ -291,7 +251,7 @@ rf_weather_model, rf_weather_preds = evaluate(
 )
 
 
-# ── FIGURE 6 — Feature Importance from Regression RF (FIX #1 & #2) ──────────
+# ── FIGURE 6 — Feature Importance from Regression RF
 # FIX #1: was RandomForestClassifier on binary target — now uses the
 #          regression RF fitted above, consistent with the model comparison.
 # FIX #2: was re-reading raw CSV without filters — now uses already-filtered data.
