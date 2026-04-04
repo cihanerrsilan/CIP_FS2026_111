@@ -362,12 +362,12 @@ dff = df[mask].copy()
 
 # HEADER BANNER
 
-st.markdown("""
+st.markdown(f"""
 <div class="title-banner">
     <h1>✈ ZRH Flight Delay Dashboard</h1>
     <p>Analysis and Prediction of Departure Delays · Zurich Airport · Oct – Dec 2025</p>
     <span class="badge">CIP Group 111</span>
-    f'<span class="badge">{len(df):,} flights</span>'
+    <span class="badge">{len(df):,} flights</span>
     <span class="badge">3 months</span>
     <span class="badge">4 ML models</span>
 </div>
