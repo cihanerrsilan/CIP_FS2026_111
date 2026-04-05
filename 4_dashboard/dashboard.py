@@ -452,7 +452,7 @@ with tab1:
             bargap=0.04,
             height=340,
         )
-        st.plotly_chart(fig_hist, use_container_width=True)
+        st.plotly_chart(fig_hist, width='stretch')
 
     with col_b:
         # Delay category donut
@@ -478,7 +478,7 @@ with tab1:
                         bgcolor="rgba(0,0,0,0)", bordercolor="rgba(255,255,255,0.1)", borderwidth=1),
             height=340,
         )
-        st.plotly_chart(fig_donut, use_container_width=True)
+        st.plotly_chart(fig_donut, width='stretch')
 
     # ── Hour of day & Day of week
     st.markdown('<p class="section-header">Temporal Patterns</p>', unsafe_allow_html=True)
@@ -503,7 +503,7 @@ with tab1:
             yaxis_title="Avg Delay [min]",
             height=320,
         )
-        st.plotly_chart(fig_hour, use_container_width=True)
+        st.plotly_chart(fig_hour, width='stretch')
 
     with col_d:
         day_order = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -527,7 +527,7 @@ with tab1:
             yaxis_title="Avg Delay [min]",
             height=320,
         )
-        st.plotly_chart(fig_dow, use_container_width=True)
+        st.plotly_chart(fig_dow, width='stretch')
 
     # ── Airlines & Aircraft
     st.markdown('<p class="section-header">Airlines & Aircraft</p>', unsafe_allow_html=True)
@@ -560,7 +560,7 @@ with tab1:
             xaxis_title="Avg Delay [min]",
             height=420,
         )
-        st.plotly_chart(fig_airline, use_container_width=True)
+        st.plotly_chart(fig_airline, width='stretch')
 
     with col_f:
         fam_stats = (
@@ -586,7 +586,7 @@ with tab1:
             yaxis_title="Avg Delay [min]",
             height=420,
         )
-        st.plotly_chart(fig_fam, use_container_width=True)
+        st.plotly_chart(fig_fam, width='stretch')
 
     # ── Monthly heatmap: hour × day
     st.markdown('<p class="section-header">Delay Heatmap: Hour × Day of Week</p>', unsafe_allow_html=True)
@@ -609,7 +609,7 @@ with tab1:
         yaxis_title="Departure Hour (UTC)",
         height=420,
     )
-    st.plotly_chart(fig_heat, use_container_width=True)
+    st.plotly_chart(fig_heat, width='stretch')
 
 
 
@@ -645,7 +645,7 @@ with tab2:
             title="Pearson Correlation Matrix",
             height=380,
         )
-        st.plotly_chart(fig_corr, use_container_width=True)
+        st.plotly_chart(fig_corr, width='stretch')
 
     with col_w2:
         # Scatter: wind speed vs delay
@@ -666,7 +666,7 @@ with tab2:
         )
         fig_scatter.update_traces(marker_size=5)
         fig_scatter.update_layout(**PLOTLY_LAYOUT, legend=LEGEND_STYLE, height=380)
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        st.plotly_chart(fig_scatter, width='stretch')
 
     # ── Grouped bar charts
     col_w3, col_w4, col_w5 = st.columns(3, gap="medium")
@@ -691,7 +691,7 @@ with tab2:
             yaxis_title="Avg Delay [min]",
             height=320,
         )
-        st.plotly_chart(fig_wind, use_container_width=True)
+        st.plotly_chart(fig_wind, width='stretch')
 
     with col_w4:
         dff["temp_bin"] = pd.cut(dff["temperature_C"],
@@ -713,7 +713,7 @@ with tab2:
             yaxis_title="Avg Delay [min]",
             height=320,
         )
-        st.plotly_chart(fig_temp, use_container_width=True)
+        st.plotly_chart(fig_temp, width='stretch')
 
     with col_w5:
         dff["precip_bin"] = pd.cut(dff["precipitation_mm"],
@@ -735,7 +735,7 @@ with tab2:
             yaxis_title="Avg Delay [min]",
             height=320,
         )
-        st.plotly_chart(fig_prec, use_container_width=True)
+        st.plotly_chart(fig_prec, width='stretch')
 
     st.markdown(
         '<div class="insight-box">💡 <b>Key Insight:</b> All weather variables show very low '
@@ -810,7 +810,7 @@ with tab3:
             height=380,
         )
         fig_cmp.update_xaxes(tickangle=15, tickfont_size=9)
-        st.plotly_chart(fig_cmp, use_container_width=True)
+        st.plotly_chart(fig_cmp, width='stretch')
 
     # ── Feature importance + Actual vs Predicted
     st.markdown('<p class="section-header">Feature Importance & Prediction Quality — RQ3</p>',
@@ -836,7 +836,7 @@ with tab3:
             xaxis_title="Importance [-]",
             height=360,
         )
-        st.plotly_chart(fig_fi, use_container_width=True)
+        st.plotly_chart(fig_fi, width='stretch')
 
     with col_m4:
         rf_model, rf_preds, y_te_ref = models["Random Forest\n(+ Weather)"]
@@ -868,7 +868,7 @@ with tab3:
             yaxis_title="Predicted Delay [min]",
             height=360,
         )
-        st.plotly_chart(fig_avp, use_container_width=True)
+        st.plotly_chart(fig_avp, width='stretch')
 
     st.markdown(
         '<div class="insight-box">💡 <b>RQ3 Answer:</b> Route average historical delay is the '
@@ -1012,7 +1012,7 @@ with tab4:
     )
     c_gauge, _ = st.columns([2, 1])
     with c_gauge:
-        st.plotly_chart(fig_gauge, use_container_width=True)
+        st.plotly_chart(fig_gauge, width='stretch')
 
     st.markdown(
         '<div class="insight-box">⚠️ <b>Disclaimer:</b> The models explain only ~6% of delay '
