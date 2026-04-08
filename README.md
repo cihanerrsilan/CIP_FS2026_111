@@ -111,7 +111,10 @@ Instead of a static report, you can access the full predictive analytics suite a
 * **Real-Time Inference:** Input live weather and flight data to receive instant delay predictions based on our trained machine learning models.
 * **Dynamic Data Exploration:** Explore historical trends, feature importances ($R^2$, RMSE), and flight distributions through interactive Plotly charts.
 * **Integrated Pipeline:** Experience the end-to-end data science lifecycle, from automated API-driven acquisition (AeroDataBox & Open-Meteo) to final model deployment.
+---
 
+## Team Contributions
+We built this project as a true team effort. Everyone had their hands in the entire process, from sketching out the initial pipeline architecture to squashing the final bugs. However, to keep things moving efficiently, we divided the technical leadership roles based on our individual strengths:
 ---
 ## Requirements
  
