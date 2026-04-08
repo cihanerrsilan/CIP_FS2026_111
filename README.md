@@ -93,16 +93,16 @@ Several fields contain nested information stored as strings. These values are pa
 >Expected — most delays at hub airports like ZRH come from factors not in pre-departure data (e.g., inbound aircraft delay, crew rotation, reactionary network delays).
 
 
-**5. Interactive Dashboard** — `dashboard.py` is a Streamlit + Plotly dashboard with four tabs (Delay Explorer, Weather Analysis, Predictive Modelling, Live Predictor).
+**5. Interactive Dashboard** — `dashboard.py` is a **Streamlit + Plotly** dashboard with four tabs (Delay Explorer, Weather Analysis, Predictive Modelling, Live Predictor).
  
 ```bash
 streamlit run 4_dashboard/dashboard.py
 ```
-The app opens automatically at `http://localhost:8501`.
-To disable auto-open: `streamlit run 4_dashboard/dashboard.py --server.headless true`
+Opens automatically at `http://localhost:8501`  
+To disable auto-open: add `--server.headless true`
 ---
 
-## Live Interactive Dashboard
+**5.1 Live Interactive Dashboard**
 Instead of a static report, you can access the full predictive analytics suite and interactive visualizations directly via Streamlit Cloud:
 
 **https://zrh-flight-delay.streamlit.app**
