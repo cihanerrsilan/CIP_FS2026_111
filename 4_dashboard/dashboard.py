@@ -374,7 +374,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 
-
+st.info("🖥️ Best viewed in full screen for the clearest charts — press **F11** or maximise your browser window.")
 # KPI METRICS ROW
 
 m1, m2, m3, m4, m5 = st.columns(5)
