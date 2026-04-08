@@ -114,7 +114,24 @@ Instead of a static report, you can access the full predictive analytics suite a
 ---
 
 ## Team Contributions
-We built this project as a true team effort. Everyone had their hands in the entire process, from sketching out the initial pipeline architecture to squashing the final bugs. However, to keep things moving efficiently, we divided the technical leadership roles based on our individual strengths:
+
+This project was developed using a highly collaborative approach. Every major step, from defining the pipeline architecture to debugging the final code, was handled collectively. **Furthermore, the final project documentation, the structuring of this README file, and the overall management of the GitHub repository were built, edited, and finalized completely together as a joint effort.**
+
+While we all reviewed and contributed to the entire codebase and deliverables, our individual focus areas for technical leadership were distributed as follows:
+
+* **Silan Cihaner:**
+  * **Primary Focus:** Data Acquisition & Engineering
+  * **Key Contributions:** Led the API integration process, successfully extracting flight and weather data from AeroDataBox and Open-Meteo. Handled RapidAPI rate limits, implemented robust `requests` loops with try-except blocks, and managed the initial data extraction and SQLite caching mechanisms.
+
+* **Hanieh Jebeli:**
+  * **Primary Focus:** Data Preprocessing & Dashboard Integration
+  * **Key Contributions:** Managed the core data cleaning pipeline using `pandas`, including the IQR methodology for extreme delay outliers and complex feature engineering (e.g., calculating `route_avg_delay`). Took the lead on structuring the final interactive Streamlit dashboard application.
+
+* **Elif Gürçinar:**
+  * **Primary Focus:** Exploratory Analysis & Predictive Modeling
+  * **Key Contributions:** Directed the statistical analysis and exploratory data visualizations. Evaluated the machine learning models (Linear Regression and Random Forest), extracted feature importances, and ensured the models effectively addressed the core research questions.
+ 
+    
 ---
 ## Requirements
  
