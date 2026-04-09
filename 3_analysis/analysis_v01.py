@@ -13,7 +13,7 @@ df_model = df[df["is_outlier"] == False].copy()
 
 Path("../outputs").mkdir(parents=True, exist_ok=True)
 
-# 1. EDA: Basic overview
+# 1. EDA: Basic overviewxy: exp analysis
 print("Shape:", df.shape)
 print(df.describe())
 print(df["delay_min"].describe())
