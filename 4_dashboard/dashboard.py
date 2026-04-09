@@ -259,8 +259,8 @@ def load_data(path: Path) -> pd.DataFrame:
     return df
 
 
-@st.cache_data(show_spinner=False)
-def run_models(df: pd.DataFrame):
+@st.cache_resource(show_spinner=False)
+def run_models(_df):
     features_base    = ["dep_hour", "dep_dow", "dep_month", "is_weekend", "route_avg_delay"]
     features_weather = features_base + ["temperature_C", "precipitation_mm", "wind_speed_kmh"]
 
