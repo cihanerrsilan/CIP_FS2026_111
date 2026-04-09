@@ -1,5 +1,5 @@
 # --- Core Data & Machine Learning ---
-pandas==2.3.3
+pandas==3.0.2
 numpy==2.4.3
 scikit-learn==1.8.0
 
@@ -14,4 +14,4 @@ seaborn==0.13.2
 plotly==6.6.0
 
 # --- Web Dashboard ---
-streamlit==1.55.0
+streamlit==1.56.0
